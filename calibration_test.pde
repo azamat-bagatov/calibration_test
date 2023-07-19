@@ -86,10 +86,22 @@ void draw() {
     break;
 
   case 1:
-    // initiate movement to the next circle
+    // record 
+    // initiate movement to the next point on circle
+    // prediction model #1 for rectangular shape
+    // go to center
     break;
   }
 }
+
+//float recordedXY[][] = new float
+
+//void keyPressed(){
+//  if(key == ENTER){
+//    println("state 1, moving to next point");
+//    state = 1;
+//  }
+//}
 
 boolean dragged = false;
 
