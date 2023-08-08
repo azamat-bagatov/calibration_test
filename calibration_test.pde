@@ -225,14 +225,14 @@ void render() {
 
 
   popMatrix();
-  
-  int OFFS = 25;
+  textSize(20);
+  int OFFS = 40;
   fill(250);
   translate(machineX, machineY);
   pushMatrix();
   translate(-OFFS*2, OFFS);
   scale(1, -1);
-  text(TL,0 , 0);
+  text(nf(TL,0,1),0 , 0);
   popMatrix();
   
   pushMatrix();
