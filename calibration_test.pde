@@ -23,10 +23,10 @@ float mass = 5.0;
 float G_CONSTANT =  9.80665;
 
 //frame angle in radians
-float alpha = 0.1;
+float alpha = 0.26;
 
 //fixed tension of bottom belts, in N
-float tensionBottom = 100.0;
+float tensionBottom = 50.0;
 
 //tension forces
 float BL, TL, BR, TR;
@@ -39,21 +39,26 @@ void calculate_tesions(float x, float y) {
 
   A = (Xtl - x) / (Ytl - y);
   C = (Xtr - x) / (Ytr - y);
+  A= abs(A); C = abs(C);
   sinD =  x / sqrt( sq(x) + sq(y) );
   cosD =  y / sqrt( sq(x) + sq(y) );
-  sinE = (Xbr - x) / sqrt( sq(Xbr-x) + sq(y) );
+  sinE = abs(Xbr - x) / sqrt( sq(Xbr-x) + sq(y) );
   cosE = y / sqrt( sq(Xbr-x) + sq(y) );
 
-  Fx = BR*sinD - BL*sinE;
-  Fy = BR*cosD + BR*cosE + mass * G_CONSTANT * cos(alpha);
-
+  Fx = BR*sinE - BL*sinD;
+  Fy = BR*cosE + BL*cosD + mass * G_CONSTANT * cos(alpha);
+  println("Fx = " + nf(Fx,0,1) + ", Fy = " +  nf(Fy,0,1) );
+  
   float TLy = ( Fx + C*Fy) / ( A + C );
   float TRy =  Fy - TLy ;
   float TRx = C * ( Fy - TLy);
   float TLx = A * TLy;
+  
+  println("TLy = " + nf(TLy,0,1) + ", TRy = " +  nf(TRy,0,1) + ", TRx = " +  nf(TRx,0,1) + ", TLx = " +  nf(TLx,0,1) );
 
   TL = sqrt( sq(TLx) + sq(TLy) );
   TR = sqrt( sq(TRx) + sq(TRy) );
+  
 }
 
 
@@ -196,7 +201,7 @@ void render() {
   stroke(200, 30, 50);
   fill(200, 30, 50);
   
-  float scale = 0.5;
+  float scale = 1;
   pushMatrix();
   translate(machineX, machineY);
 
@@ -222,7 +227,11 @@ void render() {
   f = BL*scale;
   a = atan( (machineY - Ybl) / (machineX - Xbl) );
   arrow(0, 0, -f*cos(a), -f*sin(a));
-
+  
+  stroke(20,150,80);
+  fill(20,150,80);
+  f = mass * G_CONSTANT * cos(alpha) *scale;
+  arrow(0, 0, 0, -f);
 
   popMatrix();
   textSize(20);
@@ -238,19 +247,19 @@ void render() {
   pushMatrix();
   translate(OFFS, OFFS);
   scale(1, -1);
-  text(TR,0 , 0);
+  text(nf(TR,0,1) ,0 , 0);
   popMatrix();
   
   pushMatrix();
   translate(OFFS, -OFFS);
   scale(1, -1);
-  text(BR,0 , 0);
+  text(nf(BR,0,1),0 , 0);
   popMatrix();
   
   pushMatrix();
   translate(-OFFS*2, -OFFS);
   scale(1, -1);
-  text(BL,0 , 0);
+  text(nf(BL,0,1),0 , 0);
   popMatrix();
 
   
@@ -265,7 +274,7 @@ void render() {
 }
 
 void arrow(float x1, float y1, float x2, float y2) {
-  float a = 6;// dist(x1, y1, x2, y2) / 50;
+  float a = 3;// dist(x1, y1, x2, y2) / 50;
   pushMatrix();
   translate(x2, y2);
   rotate(atan2(y2 - y1, x2 - x1));
